@@ -1,32 +1,32 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-void solve(int *rows, int n, int col)
+void solve(int *queens, int n, int col)
 {
-	int i = 0;
-
-	if(n == col)
+	int l = 0;
+	if(col == n)
 	{
-		while(i < n)
+		while(l < n)
 		{
-			if(i)
+			if(l)
 				fprintf(stdout, " ");
-			fprintf(stdout, "%d", rows[i]);
-			i++;
+			fprintf(stdout, "%d", queens[l]);
+			l++;
 		}
 		fprintf(stdout, "\n");
 		return;
 	}
-	while(i < n)
+	while(l < n)
 	{
-		int safe = 1;
 		int prev_col = 0;
+		int safe = 1;
 		while(prev_col < col)
 		{
-			int diag = rows[prev_col] - i;
+			int diag = queens[prev_col] - l;
 			if(diag < 0)
 				diag = -diag;
-			if(rows[prev_col] == i || diag == col - prev_col)
+			if(queens[prev_col] == l || diag == col - prev_col)
 			{
 				safe = 0;
 				break;
@@ -35,20 +35,20 @@ void solve(int *rows, int n, int col)
 		}
 		if(safe)
 		{
-			rows[col] = i;
-			solve(rows, n, col + 1);
+			queens[col] = l;
+			solve(queens, n, col + 1);
 		}
-		i++;
+		l++;
 	}
 }
 int main(int ac, char **av)
 {
 	if(ac != 2)
-		return 0;
+		return 1;
 	int n = atoi(av[1]);
 	if(n <= 0)
-		return 0;
-	int rows[n];
-	solve(rows, n, 0);
+		return 1;
+	int queens[n];
+	solve(queens, n, 0);
 	return 0;
 }
