@@ -1,8 +1,7 @@
-#include "train.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-static void print_sub(int *sub, int size)
+static void print_sum(int *sub, int size)
 {
 	int i = 0;
 	while(i < size)
@@ -15,41 +14,43 @@ static void print_sub(int *sub, int size)
 	printf("\n");
 }
 
-void find_sub(int *arr, int size, int target, int *sub, int sub_size, int i, int sum)
+void powerset(int *arr, int size, int target, int *sub, int sub_size, int i, int sum)
 {
 	if(i == size)
 	{
-		if(target == sum && sub_size > 0)
-			print_sub(sub, sub_size);
+		if(sum == target)
+			print_sum(sub, sub_size);
 		return;
 	}
+	powerset(arr, size, target, sub, sub_size, i + 1, sum);
 
-	find_sub(arr, size, target, sub, sub_size, i + 1, sum);
 	sub[sub_size] = arr[i];
-	find_sub(arr, size, target, sub, sub_size + 1, i + 1, sum + arr[i]);
+	powerset(arr, size, target, sub, sub_size + 1, i + 1, sum + arr[i]);
 }
 
 int main(int ac, char **av)
 {
 	int size = ac - 2;
-	int target = atoi(av[1]);
+	if(size < 1)
+		return 1;
 	int i = 0;
+	int target = atoi(av[1]);
 	int *arr = malloc(sizeof(int) * size);
 	if(!arr)
-		exit(1);
+		return 1;;
 	while(i < size)
 	{
 		arr[i] = atoi(av[i + 2]);
 		i++;
 	}
-	int *subset = malloc(sizeof(int) * size);
-	if(!subset)
+	int *sub = malloc(sizeof(int) * size);
+	if(!sub)
 	{
 		free(arr);
-		exit(1);
+		return 1;
 	}
-	find_sub(arr, size, target, subset, 0, 0, 0);
+	powerset(arr, size, target, sub, 0, 0, 0);
 	free(arr);
-	free(subset);
+	free(sub);
 	return 0;
 }
