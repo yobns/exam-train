@@ -2,12 +2,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void print_perm(char *perm, int size)
-{
-	write(1, perm, size);
-	write(1, "\n", 1);
-}
-
 void sort_arr(char *str, int size)
 {
 	int i = 0;
@@ -34,7 +28,11 @@ void permute(char *arr, char *temp, char *used, int size, int pos)
 {
 	int i = 0;
 	if(pos == size)
-		return(print_perm(temp, size));
+	{
+		write(1, temp, size);
+		write(1, "\n", 1);
+		return;
+	}
 	while(i < size)
 	{
 		if(!used[i])
